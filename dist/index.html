@@ -22,22 +22,129 @@
             <div class="flex items-center justify-center bg-orange-300 px-14 w-full">
                 <div class="flex items-center justify-center p-2 w-full">
                     <input type="text" id="inputTask" class="w-4/5 h-10 bg-white placeholder:text-slate-400 text-slate-700 text-xl px-4 py-2 transition duration-300 ease-in-out focus:outline-none focus:border-slate-500 hover:border-slate-400 shadow-sm focus:shadow-md" placeholder="Task..."
-z                    />
+/>
                     <button id="addTask" class="flex items-center justify-center w-1/5 h-10 px-10 py-2 bg-purple-600 text-white text-xl hover:bg-pink-400 transition duration-300">Add</button>
                 </div>
             </div>
             <div id="allTask">
-                <div id="addedTask" class="flex items-center justify-between text-sm w-full border-2 border-solid border-white mt-4 mx-auto">
+                <!-- <div id="addedTask" class="flex items-center justify-between text-sm w-full border-2 border-solid border-white mt-4 mx-auto">
                     <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">Groceries</div>
                     <div class="flex items-center w-2/4 m-auto">
-                        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid"><i class="fa fa-hourglass-o text-orange-300" aria-hidden="true"></i>&nbsp;Pending &nbsp;<i class="fa fa-hourglass text-green-500" aria-hidden="true"></i>&nbsp;Completed</div>
+                        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid"><i class="fa fa-hourglass-o text-orange-300" aria-hidden="true"></i>&nbsp;Pending</div>
                         <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid"><i class="fa fa-times text-red-700" aria-hidden="true"></i></i>&nbsp;Delete</div>
                     </div>
-                </div>    
+                </div>
+                <div id="addedTask" class="flex items-center justify-between text-sm w-full border-2 border-solid border-white mt-4 mx-auto">
+                    <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">Laundry</div>
+                    <div class="flex items-center w-2/4 m-auto">
+                        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid"><i class="fa fa-hourglass text-green-500" aria-hidden="true"></i>&nbsp;Completed</div>
+                        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid"><i class="fa fa-times text-red-700" aria-hidden="true"></i></i>&nbsp;Delete</div>
+                    </div>
+                </div>     -->
             </div>
         </div>
     </main>
     <script>
+    // Get DOM elements
+    const inputTask = document.getElementById('inputTask');
+    const addTaskBtn = document.getElementById('addTask');
+    const allTask = document.getElementById('allTask');
+
+    // Add task function
+    function addTask() {
+    const taskText = inputTask.value.trim();
+    if (taskText === '') {
+        alert('Please enter a task!');
+        return;
+    }
+
+    // Create task object
+    const task = {
+        id: Date.now(), // Unique ID based on timestamp
+        text: taskText,
+        status: 'Pending'
+    };
+
+    // Create task element
+    const taskDiv = document.createElement('div');
+    taskDiv.setAttribute('data-id', task.id);
+    taskDiv.className = 'flex items-center justify-between text-sm w-full border-2 border-solid border-white mt-4 mx-auto';
+
+    // Task content
+    taskDiv.innerHTML = `
+        <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">
+        ${task.text}
+        </div>
+        <div class="flex items-center w-2/4 m-auto">
+        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid status">
+            <button class="toggle-btn ml-2" onclick="toggleTask(${task.id})">
+            <i class="fa fa-hourglass-o text-orange-300 ${task.status === 'Pending' ? '' : 'hidden'}" aria-hidden="true"></i>
+            <i class="fa fa-hourglass text-green-500 ${task.status === 'Completed' ? '' : 'hidden'}" aria-hidden="true"></i>
+            ${task.status}
+            </button>
+        </div>
+        <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid">
+            <button class="delete-btn" onclick="deleteTask(${task.id})">
+            <i class="fa fa-times text-red-700" aria-hidden="true"></i> Delete
+            </button>
+        </div>
+        </div>
+    `;
+
+    // Append to task list
+    allTask.appendChild(taskDiv);
+
+    // Clear input
+    inputTask.value = '';
+    }
+
+    // Toggle task status
+    function toggleTask(id) {
+    const taskDiv = document.querySelector(`[data-id="${id}"]`);
+    const statusDiv = taskDiv.querySelector('.status');
+    const currentStatus = statusDiv.textContent.includes('Pending') ? 'Pending' : 'Completed';
+    const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending';
+
+    // Update status text and icons
+    statusDiv.innerHTML = `
+        <button class="toggle-btn ml-2" onclick="toggleTask(${id})">
+        <i class="fa fa-hourglass-o text-orange-300 ${newStatus === 'Pending' ? '' : 'hidden'}" aria-hidden="true"></i>
+        <i class="fa fa-hourglass text-green-500 ${newStatus === 'Completed' ? '' : 'hidden'}" aria-hidden="true"></i>
+        ${newStatus}
+        </button>
+    `;
+    }
+
+    // Delete task
+    function deleteTask(id) {
+    alert('You are about to delete this task!');
+    const taskDiv = document.querySelector(`[data-id="${id}"]`);
+    taskDiv.remove();
+    }
+
+    // Event listener for adding tasks
+    addTaskBtn.addEventListener('click', addTask);
+
+    // Event listener for pressing Enter key to add task
+    inputTask.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        addTask();
+    }
+    });
+
+    // Initialize existing tasks with toggle functionality
+    document.querySelectorAll('#allTask > div').forEach(taskDiv => {
+    const id = taskDiv.getAttribute('data-id') || Date.now();
+    taskDiv.setAttribute('data-id', id);
+    const statusDiv = taskDiv.querySelector('.status') || taskDiv.querySelector('.flex.items-center.w-full.h-10.text-white.font-bold.border-l-0.border-solid:not(:last-child)');
+    if (statusDiv && !statusDiv.querySelector('.toggle-btn')) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggle-btn ml-2';
+        toggleBtn.innerHTML = '<i class="fa fa-refresh text-blue-500" aria-hidden="true"></i>';
+        toggleBtn.onclick = () => toggleTask(id);
+        statusDiv.appendChild(toggleBtn);
+    }
+    });
     </script>
 </body>
 </html>
