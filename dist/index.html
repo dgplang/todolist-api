@@ -9,13 +9,13 @@
     <link href="https://fonts.googleapis.com/cSS 2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" href="/media/favicon.svg" type="image/x-icon">
 </head>
 <body class="m-0 p-0 box-border bg-gradient-to-r from-pink-400 to-purple-600">
     <header class="bg-purple-600 py-3 px-4 sm:px-6 lg:px-8">
         <nav class="flex items-center justify-between max-w-7xl mx-auto">
           <div class="flex items-center gap-2 sm:gap-3">
             <img src="/media/logo.png" class="w-10 sm:w-12" alt="ToDoList application logo" />
-            <link rel="shortcut icon" href="/media/favicon.svg" type="image/x-icon">
             <span class="text-lg sm:text-2xl lg:text-3xl text-white font-bold">
               ToDoList (from API)
             </span>
@@ -89,7 +89,7 @@
 
             // Task content
             taskDiv.innerHTML = `
-                <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">
+                <div class="flex items-center w-2/4 h-10 p-3 text-white text-xs sm:text-xs md:text-xs font-medium border-r-0 border-solid">
                 ${task.text}
                 </div>
                 <div class="flex items-center w-2/4 m-auto">
@@ -136,7 +136,7 @@
 
     // Task content
     taskDiv.innerHTML = `
-        <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">
+        <div class="flex items-center w-2/4 h-10 p-3 text-white text-xs sm:text-xs md:text-xs font-medium border-r-0 border-solid">
         ${task.text}
         </div>
         <div class="flex items-center w-2/4 m-auto">
