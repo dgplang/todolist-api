@@ -16,7 +16,7 @@
           <div class="flex items-center gap-2 sm:gap-3">
             <img src="/dist/media/logo.png" class="w-10 sm:w-12" alt="ToDoList application logo" />
             <span class="text-lg sm:text-2xl lg:text-3xl text-white font-bold">
-              ToDoList
+              ToDoList (from API)
             </span>
           </div>
           <div>
@@ -27,7 +27,7 @@
         </nav>
     </header>
     <main>
-        <div class="w-full max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="w-full max-w-4xl mx-auto p-6 sm:px-6">
             <div class="flex items-center justify-center bg-orange-300 py-4">
                 <div class="flex flex-col sm:flex-row gap-4 w-full max-w-full p-4">
                     <label for="inputTask" class="sr-only">Add a new task</label>
@@ -69,6 +69,50 @@
     const addTaskBtn = document.getElementById('addTask');
     const allTask = document.getElementById('allTask');
 
+    fetch("https://jsonplaceholder.typicode.com/users/1/todos").then((response) => response.json()).then((data) => {
+        let todos = data
+
+        todos.forEach((todo) => {
+
+            // Create task object
+            const task = {
+                id: todo.id, // Unique ID based on timestamp
+                text: todo.title,
+                status: todo.completed
+            };
+
+            // Create task element
+            const taskDiv = document.createElement('div');
+            taskDiv.setAttribute('data-id', task.id);
+            taskDiv.className = 'flex items-center justify-between text-sm w-full border-2 border-solid border-white mt-4 mx-auto';
+
+            // Task content
+            taskDiv.innerHTML = `
+                <div class="flex items-center w-2/4 h-10 p-3 text-white font-bold border-r-0 border-solid">
+                ${task.text}
+                </div>
+                <div class="flex items-center w-2/4 m-auto">
+                <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid status">
+                    <button class="toggle-btn ml-2" onclick="toggleTask(${task.id})">
+                    <i class="fa fa-hourglass-o text-orange-300 ${task.status === false ? '' : 'hidden'}" aria-hidden="true"></i>
+                    <i class="fa fa-hourglass text-green-500 ${task.status === true ? '' : 'hidden'}" aria-hidden="true"></i>
+                    ${task.status}
+                    </button>
+                </div>
+                <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid">
+                    <button class="delete-btn" onclick="deleteTask(${task.id})">
+                    <i class="fa fa-times text-red-700" aria-hidden="true"></i> Delete
+                    </button>
+                </div>
+                </div>
+            `;
+
+            // Append to task list
+            allTask.appendChild(taskDiv);
+
+        })
+    })
+
     // Add task function
     function addTask() {
     const taskText = inputTask.value.trim();
@@ -81,7 +125,7 @@
     const task = {
         id: Date.now(), // Unique ID based on timestamp
         text: taskText,
-        status: 'Pending'
+        status: false
     };
 
     // Create task element
@@ -97,8 +141,8 @@
         <div class="flex items-center w-2/4 m-auto">
         <div class="flex items-center justify-center w-full h-10 text-white font-bold border-l-0 border-solid status">
             <button class="toggle-btn ml-2" onclick="toggleTask(${task.id})">
-            <i class="fa fa-hourglass-o text-orange-300 ${task.status === 'Pending' ? '' : 'hidden'}" aria-hidden="true"></i>
-            <i class="fa fa-hourglass text-green-500 ${task.status === 'Completed' ? '' : 'hidden'}" aria-hidden="true"></i>
+            <i class="fa fa-hourglass-o text-orange-300 ${task.status === false ? '' : 'hidden'}" aria-hidden="true"></i>
+            <i class="fa fa-hourglass text-green-500 ${task.status === true ? '' : 'hidden'}" aria-hidden="true"></i>
             ${task.status}
             </button>
         </div>
@@ -121,14 +165,14 @@
     function toggleTask(id) {
     const taskDiv = document.querySelector(`[data-id="${id}"]`);
     const statusDiv = taskDiv.querySelector('.status');
-    const currentStatus = statusDiv.textContent.includes('Pending') ? 'Pending' : 'Completed';
-    const newStatus = currentStatus === 'Pending' ? 'Completed' : 'Pending';
+    const currentStatus = statusDiv.textContent.includes(false) ? false : true;
+    const newStatus = currentStatus === false ? true : false;
 
     // Update status text and icons
     statusDiv.innerHTML = `
         <button class="toggle-btn ml-2" onclick="toggleTask(${id})">
-        <i class="fa fa-hourglass-o text-orange-300 ${newStatus === 'Pending' ? '' : 'hidden'}" aria-hidden="true"></i>
-        <i class="fa fa-hourglass text-green-500 ${newStatus === 'Completed' ? '' : 'hidden'}" aria-hidden="true"></i>
+        <i class="fa fa-hourglass-o text-orange-300 ${newStatus === false ? '' : 'hidden'}" aria-hidden="true"></i>
+        <i class="fa fa-hourglass text-green-500 ${newStatus === true ? '' : 'hidden'}" aria-hidden="true"></i>
         ${newStatus}
         </button>
     `;
@@ -164,63 +208,6 @@
         statusDiv.appendChild(toggleBtn);
     }
     });
-
-/*
-        fetch("https://open.er-api.com/v6/latest/USD").then((response) => response.json()).then((data) => {
-            let currencies = Object.keys(data.rates)
-
-            currencies.forEach((currency) => {
-                if (currency != "USD") {
-
-                    let option = document.createElement("option")
-                    option.value = currency
-                    if (currency == "NGN") {
-                        option.selected = true 
-                    }
-                    option.innerText = currency
-
-                    document.querySelector("#currency").appendChild(option)
-                }
-            })
-        })
-
-        let btn = document.querySelector("#check")
-
-        btn.addEventListener("click", (e) => {
-            e.preventDefault();
-
-            let value1 = document.getElementById("amount").value
-            let value2 = document.getElementById("currency").value
-
-            function formatDollar(stringNum) {
-                return Number(stringNum).toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'USD',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-                });
-            }
-
-            function formatCurrency(number) {
-                return number.toLocaleString('en-US', {
-                style: 'currency',
-                currency: value2,
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-                });
-            }
-
-            fetch("https://open.er-api.com/v6/latest/USD").then((response) => response.json()).then((data) => {
-
-                let result = document.createElement("div")
-
-                resultElement = document.getElementById("result")
-
-                resultElement.innerHTML = `Dollar Amount</div><div id="dollar" class="flex items-center h-10 w-72 border-2 border-gray-500 rounded-xl p-5 mb-10">${formatDollar(value1)}</div><div>Equivalent Amount</div><div id="other" class="flex items-center h-10 w-72 border-2 border-gray-500 rounded-xl p-5">${formatCurrency(data.rates[value2]*value1)}`
-
-            });
-        })
-*/
     </script>   
 </body>
 </html>
