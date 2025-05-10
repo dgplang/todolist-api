@@ -7,14 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/cSS 2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/dist/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/dist/style.css">
 </head>
 <body class="m-0 p-0 box-border bg-gradient-to-r from-pink-400 to-purple-600">
     <header class="bg-purple-600 py-3 px-4 sm:px-6 lg:px-8">
         <nav class="flex items-center justify-between max-w-7xl mx-auto">
           <div class="flex items-center gap-2 sm:gap-3">
-            <img src="/media/logo.png" class="w-10 sm:w-12" alt="ToDoList application logo" />
+            <img src="/dist/media/logo.png" class="w-10 sm:w-12" alt="ToDoList application logo" />
             <span class="text-lg sm:text-2xl lg:text-3xl text-white font-bold">
               ToDoList
             </span>
@@ -164,6 +164,63 @@
         statusDiv.appendChild(toggleBtn);
     }
     });
-    </script>
+
+/*
+        fetch("https://open.er-api.com/v6/latest/USD").then((response) => response.json()).then((data) => {
+            let currencies = Object.keys(data.rates)
+
+            currencies.forEach((currency) => {
+                if (currency != "USD") {
+
+                    let option = document.createElement("option")
+                    option.value = currency
+                    if (currency == "NGN") {
+                        option.selected = true 
+                    }
+                    option.innerText = currency
+
+                    document.querySelector("#currency").appendChild(option)
+                }
+            })
+        })
+
+        let btn = document.querySelector("#check")
+
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            let value1 = document.getElementById("amount").value
+            let value2 = document.getElementById("currency").value
+
+            function formatDollar(stringNum) {
+                return Number(stringNum).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                });
+            }
+
+            function formatCurrency(number) {
+                return number.toLocaleString('en-US', {
+                style: 'currency',
+                currency: value2,
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                });
+            }
+
+            fetch("https://open.er-api.com/v6/latest/USD").then((response) => response.json()).then((data) => {
+
+                let result = document.createElement("div")
+
+                resultElement = document.getElementById("result")
+
+                resultElement.innerHTML = `Dollar Amount</div><div id="dollar" class="flex items-center h-10 w-72 border-2 border-gray-500 rounded-xl p-5 mb-10">${formatDollar(value1)}</div><div>Equivalent Amount</div><div id="other" class="flex items-center h-10 w-72 border-2 border-gray-500 rounded-xl p-5">${formatCurrency(data.rates[value2]*value1)}`
+
+            });
+        })
+*/
+    </script>   
 </body>
 </html>
